@@ -31,6 +31,9 @@ var game;             // the game
 var keys;
 var spacebar;
 var graphics;
+var cursors;
+
+var lastBalloon;
 
 var COLORS = {
   GRAY_BG: 0xABABAB,
@@ -65,6 +68,7 @@ playGame.prototype = {
 	create: function() {
     game.stage.backgroundColor = COLORS.GRAY_BG;
     graphics = game.add.graphics(0, 0);
+    cursors = game.input.keyboard.createCursorKeys();
 		spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     keys = {
@@ -72,14 +76,17 @@ playGame.prototype = {
       B: game.input.keyboard.addKey(Phaser.Keyboard.B),
       R: game.input.keyboard.addKey(Phaser.Keyboard.R),
       Y: game.input.keyboard.addKey(Phaser.Keyboard.Y),
-      W: game.input.keyboard.addKey(Phaser.Keyboard.W),
-    }
+      W: game.input.keyboard.addKey(Phaser.Keyboard.W)
+    };
 
-    keys.G.onDown.add(createBalloon, this, 0, COLORS.GREEN);
-    keys.B.onDown.add(createBalloon, this, 0, COLORS.BLUE);
-    keys.R.onDown.add(createBalloon, this, 0, COLORS.DARK_RED);
-    keys.Y.onDown.add(createBalloon, this, 0, COLORS.YELLOW);
-    keys.W.onDown.add(createBalloon, this, 0, COLORS.WHITE);
+    keys.G.onDown.add(createBalloon, this, 0, COLORS.GREEN, false);
+    keys.B.onDown.add(createBalloon, this, 0, COLORS.BLUE, false);
+    keys.R.onDown.add(createBalloon, this, 0, COLORS.DARK_RED, false);
+    keys.Y.onDown.add(createBalloon, this, 0, COLORS.YELLOW, false);
+    keys.W.onDown.add(createBalloon, this, 0, COLORS.WHITE, false);
+
+    cursors.up.onDown.add(growBalloon, this, 0);
+    cursors.down.onDown.add(shrinkBalloon, this, 0);
 	},
 
 	update: function() {
@@ -106,29 +113,61 @@ playGame.prototype = {
 	}
 }
 
-function createBalloon(key, c) {
-  var color = c;
+function createBalloon(key, c, useLastBalloon) {
+  var x, y, size, color;
 
-  if (!color) {
-    color = COLORS.PINK;  // change this to random
+  if (useLastBalloon) {
+    x = lastBalloon.x;
+    y = lastBalloon.y;
+    color = lastBalloon.color;
+
+    var s = lastBalloon.size / 10;
+    s+=1;
+    size = s * 10;
+  } else {
+    color = c;
+
+    if (!color) {
+      color = COLORS.PINK;  // TODO change this to random
+    }
+
+    var s = game.rnd.between(2, 10);
+    size = s*10;
+
+    var xMin = size/2;
+    var xMax = game.width - xMin;
+    var yMin = size/2;
+    var yMax = game.height - yMin;
+
+    x = game.rnd.between(xMin, xMax);
+    y = game.rnd.between(yMin, yMax);
   }
-
-  var s = game.rnd.between(2, 10);
-  var size = s*10;
-
-  var xMin = size/2;
-  var xMax = game.width - xMin;
-  var yMin = size/2;
-  var yMax = game.height - yMin;
-
-  var x = game.rnd.between(xMin, xMax);
-  var y = game.rnd.between(yMin, yMax);
 
   graphics.beginFill(color, 1);
   graphics.drawCircle(x, y, size);
 
   graphics.beginFill(COLORS.BROWN, 1);
-  graphics.drawRect(x-1, y+size/2, 3, 50)
+  graphics.drawRect(x-1, y+size/2, 3, 50);
 
-  // play a tone here
+  // save balloon
+  lastBalloon = {
+    x: x,
+    y: y,
+    size: size,
+    color: color
+  };
+
+  // TODO play a tone here
+}
+
+function growBalloon() {
+  if (lastBalloon) {
+    createBalloon(null, null, true);
+  } else {  // TODO assuming that if there is no balloon, to create a random one
+    createBalloon();
+  }
+}
+
+function shrinkBalloon() {
+  //TODO need to figure out how to edit/remove the most recent balloon
 }
