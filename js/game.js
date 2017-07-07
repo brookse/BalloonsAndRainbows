@@ -136,6 +136,10 @@ playGame.prototype = {
 	},
 
 	update: function() {
+    if (curNumBalloons >= maxNumBalloons) {
+      clearBalloons();
+    }
+
     if (cursors.up.isDown) {
       growBalloon();
     } else if (cursors.down.isDown) {
@@ -200,7 +204,11 @@ function createBalloon(key, c, useLastBalloon) {
 
 function growBalloon() {
   if (lastBalloon) {
-    createBalloon(null, null, true);
+    if (lastBalloon.size >= 1000) {
+        clearBalloons();
+    } else {
+        createBalloon(null, null, true);  // TODO need to slow this down somehow
+    }
   } else {  // TODO assuming that if there is no balloon, to create a random one
     createBalloon(null, null, false);
   }
@@ -208,4 +216,10 @@ function growBalloon() {
 
 function shrinkBalloon() {
   //TODO need to figure out how to edit/remove the most recent balloon
+}
+
+function clearBalloons() {
+    curNumBalloons = 0;
+    graphics.clear();
+    graphics = game.add.graphics(0, 0);
 }
