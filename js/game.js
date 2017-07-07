@@ -164,7 +164,7 @@ function growBalloon() {
   if (lastBalloon) {
     createBalloon(null, null, true);
   } else {  // TODO assuming that if there is no balloon, to create a random one
-    createBalloon();
+    createBalloon(null, null, false);
   }
 }
 
