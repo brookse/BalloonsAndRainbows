@@ -34,21 +34,25 @@ var graphics;
 var cursors;
 
 var lastBalloon;
+var maxNumBalloons = 51;
+var curNumBalloons = 0;
+var backgroundColor = 0xABABAB;
 
 var COLORS = {
-  GRAY_BG: 0xABABAB,
   BROWN: 0xAC5705,
-  RED: 0xFF5858,
+  ORANGE: 0xFF5858,
   LIGHT_BLUE: 0x51FEFF,
   DARK_BLUE: 0x0000AB,
   BLUE: 0x564DFF,
   WHITE: 0xFAFAFA,
   PINK: 0xFF50FF,
   PURPLE: 0xAC00AC,
-  DARK_RED: 0xAC0904,
+  RED: 0xAC0904,
   YELLOW: 0xFFFF53,
   GREEN: 0x00AC00,
-  TEAL: 0x00A5AC
+  LIGHT_GREEN: 0x51ff52,
+  TEAL: 0x00A5AC,
+  GRAY: 0x555555
 };
 
 // creation of the game
@@ -66,24 +70,66 @@ playGame.prototype = {
 	},
 
 	create: function() {
-    game.stage.backgroundColor = COLORS.GRAY_BG;
+    game.stage.backgroundColor = backgroundColor;
     graphics = game.add.graphics(0, 0);
     cursors = game.input.keyboard.createCursorKeys();
 		spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     keys = {
-      G: game.input.keyboard.addKey(Phaser.Keyboard.G),
+      A: game.input.keyboard.addKey(Phaser.Keyboard.A),
       B: game.input.keyboard.addKey(Phaser.Keyboard.B),
+      C: game.input.keyboard.addKey(Phaser.Keyboard.C),
+      D: game.input.keyboard.addKey(Phaser.Keyboard.D),
+      E: game.input.keyboard.addKey(Phaser.Keyboard.E),
+      F: game.input.keyboard.addKey(Phaser.Keyboard.F),
+      G: game.input.keyboard.addKey(Phaser.Keyboard.G),
+      H: game.input.keyboard.addKey(Phaser.Keyboard.H),
+      I: game.input.keyboard.addKey(Phaser.Keyboard.I),
+      J: game.input.keyboard.addKey(Phaser.Keyboard.J),
+      K: game.input.keyboard.addKey(Phaser.Keyboard.K),
+      L: game.input.keyboard.addKey(Phaser.Keyboard.L),
+      M: game.input.keyboard.addKey(Phaser.Keyboard.M),
+      N: game.input.keyboard.addKey(Phaser.Keyboard.N),
+      O: game.input.keyboard.addKey(Phaser.Keyboard.O),
+      P: game.input.keyboard.addKey(Phaser.Keyboard.P),
+      Q: game.input.keyboard.addKey(Phaser.Keyboard.Q),
       R: game.input.keyboard.addKey(Phaser.Keyboard.R),
+      S: game.input.keyboard.addKey(Phaser.Keyboard.S),
+      T: game.input.keyboard.addKey(Phaser.Keyboard.T),
+      U: game.input.keyboard.addKey(Phaser.Keyboard.U),
+      V: game.input.keyboard.addKey(Phaser.Keyboard.V),
+      W: game.input.keyboard.addKey(Phaser.Keyboard.W),
+      X: game.input.keyboard.addKey(Phaser.Keyboard.X),
       Y: game.input.keyboard.addKey(Phaser.Keyboard.Y),
-      W: game.input.keyboard.addKey(Phaser.Keyboard.W)
+      Z: game.input.keyboard.addKey(Phaser.Keyboard.Z)
     };
 
-    keys.G.onDown.add(createBalloon, this, 0, COLORS.GREEN, false);
+    keys.A.onDown.add(createBalloon, this, 0, null, false);
     keys.B.onDown.add(createBalloon, this, 0, COLORS.BLUE, false);
-    keys.R.onDown.add(createBalloon, this, 0, COLORS.DARK_RED, false);
-    keys.Y.onDown.add(createBalloon, this, 0, COLORS.YELLOW, false);
+    keys.C.onDown.add(createBalloon, this, 0, null, false);
+    keys.D.onDown.add(createBalloon, this, 0, null, false);
+    keys.E.onDown.add(createBalloon, this, 0, null, false);
+    keys.F.onDown.add(createBalloon, this, 0, null, false);
+    keys.G.onDown.add(createBalloon, this, 0, COLORS.GREEN, false);
+    keys.H.onDown.add(createBalloon, this, 0, null, false);
+    keys.I.onDown.add(createBalloon, this, 0, null, false);
+    keys.J.onDown.add(createBalloon, this, 0, null, false);
+    keys.K.onDown.add(createBalloon, this, 0, null, false);
+    keys.L.onDown.add(createBalloon, this, 0, null, false);
+    keys.M.onDown.add(createBalloon, this, 0, null, false);
+    keys.N.onDown.add(createBalloon, this, 0, null, false);
+    keys.O.onDown.add(createBalloon, this, 0, COLORS.ORANGE, false);
+    keys.P.onDown.add(createBalloon, this, 0, COLORS.PINK, false);
+    keys.Q.onDown.add(createBalloon, this, 0, null, false);
+    keys.R.onDown.add(createBalloon, this, 0, COLORS.RED, false);
+    keys.S.onDown.add(createBalloon, this, 0, null, false);
+    keys.T.onDown.add(createBalloon, this, 0, null, false);
+    keys.U.onDown.add(createBalloon, this, 0, null, false);
+    keys.V.onDown.add(createBalloon, this, 0, null, false);
     keys.W.onDown.add(createBalloon, this, 0, COLORS.WHITE, false);
+    keys.X.onDown.add(createBalloon, this, 0, null, false);
+    keys.Y.onDown.add(createBalloon, this, 0, COLORS.YELLOW, false);
+    keys.Z.onDown.add(createBalloon, this, 0, null, false);
 
     cursors.up.onDown.add(growBalloon, this, 0);
     cursors.down.onDown.add(shrinkBalloon, this, 0);
@@ -128,7 +174,8 @@ function createBalloon(key, c, useLastBalloon) {
     color = c;
 
     if (!color) {
-      color = COLORS.PINK;  // TODO change this to random
+      var colors = Object.values(COLORS);
+      color = colors[game.rnd.between(0, colors.length)];
     }
 
     var s = game.rnd.between(2, 10);
@@ -141,6 +188,8 @@ function createBalloon(key, c, useLastBalloon) {
 
     x = game.rnd.between(xMin, xMax);
     y = game.rnd.between(yMin, yMax);
+
+    curNumBalloons+=1;
   }
 
   graphics.beginFill(color, 1);
