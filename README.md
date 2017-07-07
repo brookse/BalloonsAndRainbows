@@ -13,7 +13,8 @@ Balloons and Rainbows is a web-hosted recreation of an old DOS game made by [Lyz
 > Hitting the up-arrow key causes the balloon to grow until it pops. After the pop, a rainbow is drawn and the first phrase of "Twinkle, Twinkle Little Star" is played.
 
 Current implementation:
-- Press R, G, Y, W, B to create red, green, yellow, white, blue balloons (respectively).
+- Press R, G, Y, W, B, P, and O to create red, green, yellow, white, blue, pink, and orange balloons (respectively).
+- Pressing any other letter keys will create a randomly colored balloon.
 - Press UP to inflate the balloon.
 
 Thanks to [My Abandonware](http://www.myabandonware.com/game/ballons-rainbows-5-0-3eq) for posting the manual and desktop recreation.

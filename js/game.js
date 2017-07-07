@@ -131,27 +131,16 @@ playGame.prototype = {
     keys.Y.onDown.add(createBalloon, this, 0, COLORS.YELLOW, false);
     keys.Z.onDown.add(createBalloon, this, 0, null, false);
 
-    cursors.up.onDown.add(growBalloon, this, 0);
-    cursors.down.onDown.add(shrinkBalloon, this, 0);
+    // cursors.up.onDown.add(growBalloon, this, 0);
+    // cursors.down.onDown.add(shrinkBalloon, this, 0);
 	},
 
 	update: function() {
-    // check g key (green)
-
-    // check b key (blue)
-
-    // check r key (red)
-
-    // check y key (yellow)
-
-    // check w key (white)
-
-    // check up key
-
-    // check down key
-
-    // check other keys
-      // random color
+    if (cursors.up.isDown) {
+      growBalloon();
+    } else if (cursors.down.isDown) {
+      shrinkBalloon();
+    }
 	},
 
 	render: function() {
